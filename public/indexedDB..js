@@ -14,17 +14,65 @@ request.onupgradeneeded = function (event) {
     db = event.target.result;
 
     if (db.objectStoresNames.length === 0) {
-        db.createObjectStore('budgetStorage', { autoIncrement: true });
+        db.createObjectStore('BudgetTrackerStorage', { autoIncrement: true });
     }
 };
 
-
-
 // on error
+
+request.onerror = function (event) {
+    console.log(`Database error, check ${event.target.errorCode}`);
+
+    function saveRecord(record) {
+        const transaction = database.transaction(['pending'], 'readwrite');
+        let store = transaction.objectStore('pending');
+
+        store.add(record);
+    }
+};
 
 // on success
 
-// on complete
+request.onsuccess = function (event) {
+    db = event.target.result;
+
+    if (navigator.online) {
+        console.log('Success, backend online');
+        checkDatabase();
+    }
+}
+
+// complete checkDatabase
+
+function checkDatabase() {
+    console.log('checking database');
+    let transaction = db.transaction(['BudgetTrackerStorage'], 'readwrite');
+
+    let store = transaction.objectStore('BudgerTrackerStorage');
+
+    // getAll
+    const getAll = store.getAll();
+
+    getAll.onsuccess = function () {
+        if (getAll.result.length > 0) {
+            fetch('/api/transaction/bulk', {
+                method: 'POST',
+                body: JSON.stringify(getAll.result),
+            })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.length > 0) {
+                        transaction = db.transaction(['BdugetTrackerStorage'], 'readwrite');
+
+                        const currentStorage = transaction.objectStore('BudgetTrackerStorage');
+
+                        currentStorage.clear();
+                    }
+                });
+        }
+    };
+}
+
 
 // listen for online return
 window.addEventListener('online', checkDatabase);
