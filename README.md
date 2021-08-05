@@ -17,4 +17,5 @@ https://limitless-lake-96701.herokuapp.com/
 
 
 ## Considerations
-Getting all the pieces to work together proved to be a challenge. I had to make several versions of db.js to try various set ups. Getting the backend fully connected was satisfying as was learning to use the service worker and indexDB.
+Getting all the pieces to work together proved to be a challenge. I had to make several versions of db.js to try various set ups. Getting the backend fully connected was satisfying as was learning to use the service worker and indexDB.</br>
+DB.js was provided by my tutor. Intimeoutdb.js is commented out and not referenced, simply there to compare to. It worked for the most part but offline capabilites were hindered with it active.
