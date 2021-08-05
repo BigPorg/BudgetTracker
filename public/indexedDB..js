@@ -1,13 +1,12 @@
 let db;
-let budgie;
 
-// what does this OR do again?
-const request = indexedDB.open('budgetTracker', budgie || 10);
+// what does this part do again?
+const request = indexedDB.open('budgetTracker', 1);
 
 // on upgrade
 request.onupgradeneeded = function (event) {
-    const { oldVersion } = event;
-    const newVersion = event.newVersion || db.version;
+    // const { oldVersion } = event;
+    // const newVersion = event.newVersion || db.version;
 
     console.log('From old to new');
 
@@ -37,7 +36,7 @@ request.onsuccess = function (event) {
     db = event.target.result;
 
     if (navigator.online) {
-        console.log('Success, backend online');
+        console.log('Success, backend online.');
         checkDatabase();
     }
 }
@@ -58,14 +57,19 @@ function checkDatabase() {
             fetch('/api/transaction/bulk', {
                 method: 'POST',
                 body: JSON.stringify(getAll.result),
+                headers: {
+                    accept: 'application/json, textplain, */*',
+                    'Content-Type': 'application/json',
+                },
             })
                 .then((response) => response.json())
                 .then((response) => {
                     if (response.length > 0) {
                         transaction = db.transaction(['BdugetTrackerStorage'], 'readwrite');
 
-                        const currentStorage = transaction.objectStore('BudgetTrackerStorage');
 
+                        const currentStorage = transaction.objectStore('BudgetTrackerStorage');
+                        // clearing
                         currentStorage.clear();
                     }
                 });
