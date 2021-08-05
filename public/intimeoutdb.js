@@ -1,3 +1,4 @@
+const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB || window.shimIndexedDB;
 let db;
 
 // what does this part do again?
@@ -21,15 +22,14 @@ request.onupgradeneeded = function (event) {
 
 request.onerror = function (event) {
     console.log(`Database error, check ${event.target.errorCode}`);
-
-    function saveRecord(record) {
-        const transaction = database.transaction(['pending'], 'readwrite');
-        let store = transaction.objectStore('pending');
-
-        store.add(record);
-    }
 };
 
+function saveRecord(record) {
+    const transaction = database.transaction(['pending'], 'readwrite');
+    let store = transaction.objectStore('pending');
+
+    store.add(record);
+}
 // on success
 
 request.onsuccess = function (event) {
