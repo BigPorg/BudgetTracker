@@ -30,7 +30,7 @@ const config = {
         new WebpackPwaManifest({
             fingerprints: false,
             name: 'BudgetTracker',
-            short_name: 'BuTr',
+            short_name: 'BudgetTracker',
             description: 'An app for building and maintaining a budget.',
             background_color: '#01579b',
             theme_color: '#ffffff',
